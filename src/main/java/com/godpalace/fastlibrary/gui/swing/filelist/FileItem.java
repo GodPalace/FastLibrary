@@ -8,7 +8,6 @@ public class FileItem {
     public String path;
     public String extension;
     public boolean isDirectory;
-    //public boolean isSelected;
 
     public static String getSeparator() {
         return FileSystems.getDefault().getSeparator();
@@ -23,6 +22,9 @@ public class FileItem {
         this.path = path;
         if (!isDirectory) this.extension = name.substring(name.lastIndexOf(".") + 1);
         this.isDirectory = isDirectory;
-        //this.isSelected = false;
+    }
+
+    public File getFile() {
+        return new File(path);
     }
 }

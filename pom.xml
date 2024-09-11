@@ -8,23 +8,6 @@
     <artifactId>FastLibrary</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.sun.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-            <version>5.14.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libraries/jna-platform-5.14.0.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jna</groupId>
-            <artifactId>jna-platform-jpms</artifactId>
-            <version>5.14.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libraries/jna-platform-jpms-5.14.0.jar</systemPath>
-        </dependency>
-    </dependencies>
-
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

@@ -1,8 +1,6 @@
 package com.godpalace.fastlibrary.gui.swing.filelist;
 
 import com.godpalace.fastlibrary.image.ImageConversion;
-import com.sun.jna.platform.win32.Shell32;
-import com.sun.jna.platform.win32.ShellAPI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,7 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-public class JFileList extends JComponent implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class JFileList extends JComponent implements MouseListener, MouseMotionListener,
+        MouseWheelListener {
     private final Vector<FileItem> files, isSelected;
     private final Vector<DoubleClickListener> actions;
     private FileSorter sorter;
@@ -57,6 +56,7 @@ public class JFileList extends JComponent implements MouseListener, MouseMotionL
 
             if (url != null) {
                 BufferedImage image = ImageIO.read(url);
+
                 if (image != null) {
                     icons.put("/DefaultMkdirIcon/", image);
                 } else {
@@ -101,15 +101,12 @@ public class JFileList extends JComponent implements MouseListener, MouseMotionL
     }
 
     public Vector<FileItem> getSelectedItems() {
-        Vector<FileItem> selected = new Vector<>();
+        return isSelected;
+    }
 
-        for (FileItem item : files) {
-            if (isSelected.contains(item)) {
-                selected.addElement(item);
-            }
-        }
-
-        return selected;
+    public FileItem getSelectedItem() {
+        if (isSelected.isEmpty()) return null;
+        return isSelected.get(0);
     }
 
     public void addItem(FileItem item) {
@@ -168,6 +165,7 @@ public class JFileList extends JComponent implements MouseListener, MouseMotionL
         this.sorter = sorter;
     }
 
+    @Deprecated
     public void registerIcon(String extension, BufferedImage icon) {
         icons.put(extension, icon);
     }
@@ -201,12 +199,6 @@ public class JFileList extends JComponent implements MouseListener, MouseMotionL
             ImageIcon icon = (ImageIcon) view.getSystemIcon(file);
             BufferedImage image = ImageConversion.toBufferedImage(icon);
             icons.put(extension, image);
-
-            try {
-                //
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -216,7 +208,7 @@ public class JFileList extends JComponent implements MouseListener, MouseMotionL
 
     @Override
     protected void paintComponent(Graphics g) {
-        for (int i = 0; i < files.size(); i++) {
+        for (int i = notches; i < this.getHeight() / 35 + 1 + notches && i < files.size(); i++) {
             FileItem item = files.get(i);
 
             if (isSelected.contains(item)) {
@@ -279,7 +271,7 @@ public class JFileList extends JComponent implements MouseListener, MouseMotionL
 
                     if (!actions.isEmpty()) {
                         for (DoubleClickListener c : actions) {
-                            c.click(files.get(index));
+                            c.click(new DoubleClickEvent(files.get(index)));
                         }
 
                         repaint();
@@ -330,7 +322,7 @@ public class JFileList extends JComponent implements MouseListener, MouseMotionL
     public void mouseWheelMoved(MouseWheelEvent e) {
         int notches = e.getWheelRotation();
 
-        if (notches > 0 && this.notches + notches >= files.size() - this.getHeight() / 35) {
+        if (notches > 0 && this.notches + notches > files.size() - this.getHeight() / 35) {
 
             this.notches = files.size() - this.getHeight() / 35;
         }else if (notches < 0 && this.notches + notches < 0) {
